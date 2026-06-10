@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Про мене</title>
+    <link rel="stylesheet" href="../styles/style.css">
+    <link rel="stylesheet" href="../styles/responsive.css">
+</head>
+<body>
+    <header class="site-header">
+        <div class="header-controls">
+                <button class="theme-toggle" aria-label="Змінити тему">🌙</button>
+                <button class="burger-btn" aria-expanded="false" aria-label="Відкрити меню">☰</button>
+        </div>
+        <nav>
+            <ul class="nav-list">
+                <li><a href="../index.html">Головна</a></li>
+                <li><a href="about.html" class="active">Про мене</a></li>
+                <li><a href="contact.html">Контакти</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main class="container">
+        <section>
+            <h2>Навички (Акордеон)</h2>
+<div class="accordion">
+    <button class="accordion-header">HTML / CSS</button>
+    <div class="accordion-content">Знаю семантичну верстку, Flexbox та Grid.</div>
+    <button class="accordion-header">JavaScript</button>
+    <div class="accordion-content">Вмію працювати з DOM, подіями та LocalStorage.</div>
+</div>
+
+<h2>Мої проєкти (Фільтр)</h2>
+<div class="filter-controls">
+    <button class="filter-btn active" data-filter="all">Всі</button>
+    <button class="filter-btn" data-filter="study">Навчання</button>
+    <button class="filter-btn" data-filter="pet">Pet-проєкти</button>
+</div>
+<div class="two-column">
+    <div class="card filter-item" data-category="study">Верстка лендингу (Навчання)</div>
+    <div class="card filter-item" data-category="pet">Калькулятор витрат (Pet)</div>
+</div>
+
+<h2>Дізнатись більше</h2>
+<button class="open-modal-btn">Відкрити модальне вікно</button>
+
+<div class="modal-overlay">
+    <div class="modal-content">
+        <button class="modal-close">&times;</button>
+        <h3>Секретна інформація</h3>
+        <p>Цей текст знаходиться в модальному вікні, яке не ламає верстку!</p>
+    </div>
+</div>
+            <h1>Про мене</h1>
+            
+            <div class="two-column">
+                <div class="card">
+                    <h2>Хто я?</h2>
+                    <p>Я початківець у веб-розробці. Вивчаю HTML, CSS та основи створення сучасних сайтів.</p>
+                    <p>Ця сторінка демонструє роботу з Flexbox-сіткою, де цей текст знаходиться зліва, а аудіоплеєр — справа.</p>
+                </div>
+                
+                <div class="card media-card">
+                    <h3>Моя улюблена музика</h3>
+                    <audio controls>
+                        <source src="https://www.w3schools.com/html/horse.ogg" type="audio/ogg">
+                        Ваш браузер не підтримує аудіо елемент.
+                    </audio>
+                    <p class="media-caption">Спокійна мелодія для програмування</p>
+                </div>
+            </div>
+
+            <div class="card media-card">
+                <h2>Моє відео</h2>
+                <video controls muted>
+                    <source src="https://www.w3schools.com/html/mov_bbb.mp4" type="video/mp4">
+                    Ваш браузер не підтримує відео тег.
+                </video>
+                <p class="media-caption">Короткий тестовий відеоролик (приклад інтеграції)</p>
+            </div>
+        </section>
+    </main>
+
+    <footer class="site-footer">
+        <p>&copy; <span id="current-year"></span> Мій перший сайт. Усі права захищено.</p>
+    </footer>
+    <button id="scroll-to-top" class="scroll-btn" title="Повернутися вгору">⬆</button>
+    <script src="./js/main.js" defer></script>
+</body>
+</html> 

@@ -1,0 +1,32 @@
+@media (max-width: 768px) {
+  .nav-list {
+    flex-direction: column;
+    gap: 12px;
+  }
+  
+  .two-column {
+    flex-direction: column;
+  }
+  
+  h1 {
+    font-size: 28px;
+  }
+  
+  .container {
+    width: min(100% - 20px, 1100px);
+  }
+
+  section {
+    padding: 24px 0;
+  }
+
+  .card {
+    padding: 16px;
+  }
+
+  table {
+    display: block;
+    overflow-x: auto;
+    white-space: nowrap;
+  }
+}

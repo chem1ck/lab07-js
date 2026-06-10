@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Контакти</title>
+    <link rel="stylesheet" href="../styles/style.css">
+    <link rel="stylesheet" href="../styles/responsive.css">
+</head>
+<body>
+    <header class="site-header">
+        <div class="header-controls">
+    <button class="theme-toggle" aria-label="Змінити тему">🌙</button>
+    <button class="burger-btn" aria-expanded="false" aria-label="Відкрити меню">☰</button>
+</div>
+        <nav>
+            <ul class="nav-list">
+                <li><a href="../index.html">Головна</a></li>
+                <li><a href="about.html">Про мене</a></li>
+                <li><a href="contact.html" class="active">Контакти</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main class="container">
+        <section>
+            <h1>Зв'яжіться зі мною</h1>
+            
+            <div class="card">
+                <h2>Форма зворотного зв'язку</h2>
+                <div id="form-success"></div>
+
+<form action="#" method="POST" class="contact-form">
+    <div>
+        <label for="name">Ваше ім'я:</label>
+        <input type="text" id="name" name="name">
+        <span class="error-msg"></span>
+    </div>
+    
+    <div>
+        <label for="email">Ваш Email:</label>
+        <input type="text" id="email" name="email">
+        <span class="error-msg"></span>
+    </div>
+
+    <div>
+        <label for="message">Ваше повідомлення:</label>
+        <textarea id="message" name="message" rows="5" maxlength="500"></textarea>
+        <span class="char-counter" id="char-count">0/500</span>
+        <span class="error-msg"></span>
+    </div>
+
+    <button type="submit">Надіслати повідомлення</button>
+</form>
+            </div>
+        </section>
+    </main>
+
+    <footer class="site-footer">
+        <p>&copy; <span id="current-year"></span> Мій перший сайт. Усі права захищено.</p>
+    </footer>
+    <button id="scroll-to-top" class="scroll-btn" title="Повернутися вгору">⬆</button>
+<script src="./js/main.js" defer></script>
+</body>
+</html> 

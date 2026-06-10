@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Головна сторінка</title>
+    <link href="./styles/style.css" rel="stylesheet">
+    <link href="./styles/responsive.css" rel="stylesheet">
+</head>
+<body>
+    <header class="site-header">
+        <div class="header-controls">
+    <button class="theme-toggle" aria-label="Змінити тему">🌙</button>
+    <button class="burger-btn" aria-expanded="false" aria-label="Відкрити меню">☰</button>
+</div>
+        <nav>
+            <ul class="nav-list">
+                <li><a href="index.html" class="active">Головна</a></li>
+                <li><a href="./pages/about.html">Про мене</a></li>
+                <li><a href="./pages/contact.html">Контакти</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main class="container">
+        <section>
+            <h1>Вітаю на моєму сайті!</h1>
+            <p>Це моя перша практична робота з вивчення основ CSS. Тут я демонструю, як працюють глобальні стилі, типографіка та сітки.</p>
+            
+            <h2>Що я вже вивчив:</h2>
+            <ul>
+                <li>Підключення зовнішніх файлів стилів</li>
+                <li>Використання CSS-змінних для палітри кольорів</li>
+                <li>Стилізацію навігації за допомогою Flexbox</li>
+                <li>Оформлення таблиць та зображень</li>
+            </ul>
+        </section>
+
+        <section>
+            <h2>Приклади оформлення</h2>
+            
+            <div class="card">
+                <h3>Робота з медіа</h3>
+                <figure>
+                    <img src="https://images.unsplash.com/photo-1542831371-29b0f74f9713?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Код на екрані монітора">
+                    <figcaption>Приклад оформлення зображення через тег figure</figcaption>
+                </figure>
+            </div>
+
+            <div class="card">
+                <h3>Таблиця результатів</h3>
+                <table>
+                    <caption>Мій прогрес у навчанні</caption>
+                    <thead>
+                        <tr>
+                            <th>Технологія</th>
+                            <th>Рівень</th>
+                            <th>Статус</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>HTML5</td>
+                            <td>Середній</td>
+                            <td>Вивчено</td>
+                        </tr>
+                        <tr>
+                            <td>CSS3</td>
+                            <td>Початковий</td>
+                            <td>В процесі</td>
+                        </tr>
+                        <tr>
+                            <td>JavaScript</td>
+                            <td>Нульовий</td>
+                            <td>У планах</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </main>
+
+    <footer class="site-footer">
+        <p>&copy; <span id="current-year"></span> Мій перший сайт. Усі права захищено.</p>
+    </footer>
+    <button id="scroll-to-top" class="scroll-btn" title="Повернутися вгору">⬆</button>
+<script src="./js/main.js" defer></script>
+</body>
+</html>
