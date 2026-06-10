@@ -1,0 +1,74 @@
+[
+  {
+    "id": 1,
+    "title": "Тестування на проникнення (Pentest)",
+    "category": "cybersecurity",
+    "description": "Симуляція реальних хакерських атак на вашу інфраструктуру для виявлення критичних вразливостей перед тим, як їх знайдуть зловмисники.",
+    "price": 1200,
+    "rating": 4.9,
+    "image": "https://images.unsplash.com/photo-1563986768609-322da13575f3?w=500&q=80"
+  },
+  {
+    "id": 2,
+    "title": "Аудит безпеки вебдодатків",
+    "category": "cybersecurity",
+    "description": "Повний аналіз вашого сайту чи сервісу за методологією OWASP Top 10. Перевірка стійкості до SQL-ін'єкцій та XSS.",
+    "price": 850,
+    "rating": 4.8,
+    "image": "https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=500&q=80"
+  },
+  {
+    "id": 3,
+    "title": "Розробка корпоративних сайтів",
+    "category": "development",
+    "description": "Створення швидких, адаптивних та SEO-оптимізованих вебсайтів на базі сучасних стеків технологій під ключ.",
+    "price": 1500,
+    "rating": 4.7,
+    "image": "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=500&q=80"
+  },
+  {
+    "id": 4,
+    "title": "Консалтинг з безпеки (STRIDE)",
+    "category": "consulting",
+    "description": "Моделювання загроз для вашого бізнес-додатка на етапі архітектури. Побудова надійної моделі захисту інформації.",
+    "price": 600,
+    "rating": 4.6,
+    "image": "https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=500&q=80"
+  },
+  {
+    "id": 5,
+    "title": "Аналіз коду на вразливості (SAST/DAST)",
+    "category": "cybersecurity",
+    "description": "Статичний та динамічний аналіз вихідного коду вашого програмного забезпечення для виявлення прихованих дефектів безпеки.",
+    "price": 950,
+    "rating": 4.9,
+    "image": "https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?w=500&q=80"
+  },
+  {
+    "id": 6,
+    "title": "Інтеграція платіжних систем",
+    "category": "development",
+    "description": "Підключення та безпечне налаштування шлюзів Stripe, PayPal, Apple Pay до вашої існуючої e-commerce платформи.",
+    "price": 450,
+    "rating": 4.5,
+    "image": "https://images.unsplash.com/photo-1559526324-4b87b5e36e44?w=500&q=80"
+  },
+  {
+    "id": 7,
+    "title": "Розслідування інцидентів (DFIR)",
+    "category": "cybersecurity",
+    "description": "Оперативне реагування на кібератаки, аналіз шкідливого ПЗ, очищення систем та відновлення працездатності після компрометації даних.",
+    "price": 1800,
+    "rating": 5.0,
+    "image": "https://images.unsplash.com/photo-1601597111158-2fceff292cdc?w=500&q=80"
+  },
+  {
+    "id": 8,
+    "title": "Хмарний аудит інфраструктури",
+    "category": "consulting",
+    "description": "Аналіз конфігурацій ваших хмарних середовищ AWS, Azure або Google Cloud на відповідність найкращим практикам безпеки.",
+    "price": 700,
+    "rating": 4.4,
+    "image": "https://images.unsplash.com/photo-1544197150-b99a580bb7a8?w=500&q=80"
+  }
+]

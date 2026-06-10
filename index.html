@@ -1,89 +1,95 @@
 <!DOCTYPE html>
 <html lang="uk">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Головна сторінка</title>
-    <link href="./styles/style.css" rel="stylesheet">
-    <link href="./styles/responsive.css" rel="stylesheet">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Каталог послуг | Cybersecurity & IT</title>
+  <link rel="stylesheet" href="styles/style.css">
+  <link rel="stylesheet" href="styles/responsive.css">
 </head>
 <body>
-    <header class="site-header">
-        <div class="header-controls">
-    <button class="theme-toggle" aria-label="Змінити тему">🌙</button>
-    <button class="burger-btn" aria-expanded="false" aria-label="Відкрити меню">☰</button>
-</div>
-        <nav>
-            <ul class="nav-list">
-                <li><a href="index.html" class="active">Головна</a></li>
-                <li><a href="./pages/about.html">Про мене</a></li>
-                <li><a href="./pages/contact.html">Контакти</a></li>
-            </ul>
-        </nav>
-    </header>
 
-    <main class="container">
-        <section>
-            <h1>Вітаю на моєму сайті!</h1>
-            <p>Це моя перша практична робота з вивчення основ CSS. Тут я демонструю, як працюють глобальні стилі, типографіка та сітки.</p>
-            
-            <h2>Що я вже вивчив:</h2>
-            <ul>
-                <li>Підключення зовнішніх файлів стилів</li>
-                <li>Використання CSS-змінних для палітри кольорів</li>
-                <li>Стилізацію навігації за допомогою Flexbox</li>
-                <li>Оформлення таблиць та зображень</li>
-            </ul>
-        </section>
+  <header class="site-header">
+    <div class="header-controls">
+      <button class="theme-toggle" aria-label="Змінити тему"> 🌙 </button>
+      <button class="burger-menu" aria-expanded="false" aria-label="Відкрити меню"> ☰ </button>
+    </div>
+    <nav class="container">
+      <div class="logo">SecureDev</div>
+      <ul class="nav-links nav-menu">
+        <li><a href="index.html" class="nav-link active">Головна (Каталог)</a></li>
+        <li><a href="pages/about.html" class="nav-link">Про нас</a></li>
+        <li><a href="pages/contact.html" class="nav-link">Контакти</a></li>
+      </ul>
+    </nav>
+  </header>
 
-        <section>
-            <h2>Приклади оформлення</h2>
-            
-            <div class="card">
-                <h3>Робота з медіа</h3>
-                <figure>
-                    <img src="https://images.unsplash.com/photo-1542831371-29b0f74f9713?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Код на екрані монітора">
-                    <figcaption>Приклад оформлення зображення через тег figure</figcaption>
-                </figure>
-            </div>
+  <main class="container">
+    <section class="catalog-head">
+      <h1>Наші послуги</h1>
+      <p>Оберіть професійні рішення для захисту та розвитку вашого цифрового продукту.</p>
+    </section>
 
-            <div class="card">
-                <h3>Таблиця результатів</h3>
-                <table>
-                    <caption>Мій прогрес у навчанні</caption>
-                    <thead>
-                        <tr>
-                            <th>Технологія</th>
-                            <th>Рівень</th>
-                            <th>Статус</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>HTML5</td>
-                            <td>Середній</td>
-                            <td>Вивчено</td>
-                        </tr>
-                        <tr>
-                            <td>CSS3</td>
-                            <td>Початковий</td>
-                            <td>В процесі</td>
-                        </tr>
-                        <tr>
-                            <td>JavaScript</td>
-                            <td>Нульовий</td>
-                            <td>У планах</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        </section>
-    </main>
+    <section class="controls-panel">
+      <div class="search-box">
+        <input type="text" id="search-input" placeholder="Пошук послуги за назвою...">
+      </div>
 
-    <footer class="site-footer">
-        <p>&copy; <span id="current-year"></span> Мій перший сайт. Усі права захищено.</p>
-    </footer>
-    <button id="scroll-to-top" class="scroll-btn" title="Повернутися вгору">⬆</button>
-<script src="./js/main.js" defer></script>
+      <div class="filter-box">
+        <select id="category-filter">
+          <option value="all">Всі категорії</option>
+          <option value="cybersecurity">Кібербезпека</option>
+          <option value="development">Розробка</option>
+          <option value="consulting">Консалтинг</option>
+        </select>
+      </div>
+
+      <div class="sort-box">
+        <select id="sort-select">
+          <option value="default">Сортування: За замовчуванням</option>
+          <option value="title-asc">Назва (А - Я)</option>
+          <option value="price-asc">Ціна (Спочатку дешевші)</option>
+          <option value="price-desc">Ціна (Спочатку дорожчі)</option>
+        </select>
+      </div>
+    </section>
+
+    <section class="catalog-wrapper">
+      <div id="catalog-loading" class="ui-state">
+        <div class="spinner"></div>
+        <p>Завантаження актуальних даних...</p>
+      </div>
+
+      <div id="catalog-error" class="ui-state hidden">
+        <p class="error-text">Не вдалося завантажити дані. Будь ласка, спробуйте пізніше.</p>
+      </div>
+
+      <div id="catalog-empty" class="ui-state hidden">
+        <p>На жаль, за вашим запитом нічого не знайдено.</p>
+      </div>
+
+      <div id="services-grid" class="services-grid">
+        </div>
+
+      <div class="pagination-container">
+        <button id="load-more-btn" class="btn btn-secondary hidden">Показати ще</button>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <p>&copy; <span class="current-year"></span> Мій перший сайт. Усі права захищено.</p>
+  </footer>
+
+  <button class="back-to-top scroll-btn" hidden title="Повернутися вгору"> ⬆ </button>
+
+  <div id="details-modal" class="modal hidden">
+    <div class="modal-content">
+      <button class="close-modal-btn">&times;</button>
+      <div id="modal-body"></div>
+    </div>
+  </div>
+
+  <script src="js/main.js"></script>
 </body>
 </html>
