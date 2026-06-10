@@ -1,0 +1,33 @@
+{
+  "items": [
+    {
+      "id": "1",
+      "title": "Тестування на проникнення (Pentest)",
+      "category": "cybersecurity",
+      "description": "Симуляція реальних хакерських атак на вашу інфраструктуру.",
+      "price": 1200
+    },
+    {
+      "id": "2",
+      "title": "Аудит безпеки вебдодатків",
+      "category": "cybersecurity",
+      "description": "Повний аналіз вашого сайту чи сервісу за методологією OWASP Top 10.",
+      "price": 850
+    },
+    {
+      "id": "3",
+      "title": "Розробка корпоративних сайтів",
+      "category": "development",
+      "description": "Створення швидких, адаптивних та SEO-оптимізованих вебсайтів.",
+      "price": 1500
+    },
+    {
+      "title": "тест",
+      "category": "development",
+      "price": 12,
+      "description": "1",
+      "id": "_J7j19JrNaI"
+    }
+  ],
+  "$schema": "./node_modules/json-server/schema.json"
+}

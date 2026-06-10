@@ -3,93 +3,86 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Каталог послуг | Cybersecurity & IT</title>
+  <title>REST API CRUD | Каталог послуг</title>
   <link rel="stylesheet" href="styles/style.css">
-  <link rel="stylesheet" href="styles/responsive.css">
 </head>
 <body>
 
   <header class="site-header">
-    <div class="header-controls">
-      <button class="theme-toggle" aria-label="Змінити тему"> 🌙 </button>
-      <button class="burger-menu" aria-expanded="false" aria-label="Відкрити меню"> ☰ </button>
-    </div>
     <nav class="container">
-      <div class="logo">SecureDev</div>
-      <ul class="nav-links nav-menu">
-        <li><a href="index.html" class="nav-link active">Головна (Каталог)</a></li>
-        <li><a href="pages/about.html" class="nav-link">Про нас</a></li>
-        <li><a href="pages/contact.html" class="nav-link">Контакти</a></li>
-      </ul>
+      <div class="logo">SecureDev API</div>
     </nav>
   </header>
 
   <main class="container">
     <section class="catalog-head">
-      <h1>Наші послуги</h1>
-      <p>Оберіть професійні рішення для захисту та розвитку вашого цифрового продукту.</p>
+      <h1>Керування каталогом послуг (CRUD)</h1>
+      <button id="add-new-btn" class="btn btn-primary">+ Додати нову послугу</button>
     </section>
 
     <section class="controls-panel">
-      <div class="search-box">
-        <input type="text" id="search-input" placeholder="Пошук послуги за назвою...">
-      </div>
-
-      <div class="filter-box">
-        <select id="category-filter">
-          <option value="all">Всі категорії</option>
-          <option value="cybersecurity">Кібербезпека</option>
-          <option value="development">Розробка</option>
-          <option value="consulting">Консалтинг</option>
-        </select>
-      </div>
-
-      <div class="sort-box">
-        <select id="sort-select">
-          <option value="default">Сортування: За замовчуванням</option>
-          <option value="title-asc">Назва (А - Я)</option>
-          <option value="price-asc">Ціна (Спочатку дешевші)</option>
-          <option value="price-desc">Ціна (Спочатку дорожчі)</option>
-        </select>
-      </div>
+      <input type="text" id="search-input" placeholder="Пошук послуги...">
+      <select id="category-filter">
+        <option value="all">Всі категорії</option>
+        <option value="cybersecurity">Кібербезпека</option>
+        <option value="development">Розробка</option>
+        <option value="consulting">Консалтинг</option>
+      </select>
+      <select id="sort-select">
+        <option value="default">Без сортування</option>
+        <option value="price-asc">Ціна (Спочатку дешевші)</option>
+        <option value="price-desc">Ціна (Спочатку дорожчі)</option>
+      </select>
     </section>
 
     <section class="catalog-wrapper">
-      <div id="catalog-loading" class="ui-state">
-        <div class="spinner"></div>
-        <p>Завантаження актуальних даних...</p>
-      </div>
-
-      <div id="catalog-error" class="ui-state hidden">
-        <p class="error-text">Не вдалося завантажити дані. Будь ласка, спробуйте пізніше.</p>
-      </div>
-
-      <div id="catalog-empty" class="ui-state hidden">
-        <p>На жаль, за вашим запитом нічого не знайдено.</p>
-      </div>
-
-      <div id="services-grid" class="services-grid">
-        </div>
-
-      <div class="pagination-container">
-        <button id="load-more-btn" class="btn btn-secondary hidden">Показати ще</button>
-      </div>
+      <div id="ui-loading" class="ui-state hidden"><div class="spinner"></div>Завантаження даних...</div>
+      <div id="ui-error" class="ui-state hidden error-message">Помилка з'єднання з сервером API.</div>
+      <div id="ui-empty" class="ui-state hidden">Записів не знайдено.</div>
+      
+      <div id="services-grid" class="services-grid"></div>
     </section>
   </main>
 
-  <footer class="site-footer">
-    <p>&copy; <span class="current-year"></span> Мій перший сайт. Усі права захищено.</p>
-  </footer>
-
-  <button class="back-to-top scroll-btn" hidden title="Повернутися вгору"> ⬆ </button>
-
-  <div id="details-modal" class="modal hidden">
+  <div id="form-modal" class="modal hidden">
     <div class="modal-content">
-      <button class="close-modal-btn">&times;</button>
-      <div id="modal-body"></div>
+      <button class="close-modal-btn" id="close-form-btn">&times;</button>
+      <h2 id="form-title">Додати послугу</h2>
+      
+      <form id="crud-form" class="contact-form">
+        <input type="hidden" id="item-id" name="id">
+        
+        <div class="form-group">
+          <label>Назва послуги *</label>
+          <input type="text" id="item-title" name="title" required minlength="3">
+        </div>
+        
+        <div class="form-group">
+          <label>Категорія *</label>
+          <select id="item-category" name="category" required>
+            <option value="cybersecurity">Кібербезпека</option>
+            <option value="development">Розробка</option>
+            <option value="consulting">Консалтинг</option>
+          </select>
+        </div>
+        
+        <div class="form-group">
+          <label>Вартість ($) *</label>
+          <input type="number" id="item-price" name="price" required min="1">
+        </div>
+
+        <div class="form-group">
+          <label>Опис *</label>
+          <textarea id="item-desc" name="description" rows="3" required></textarea>
+        </div>
+
+        <button type="submit" class="btn btn-primary" id="submit-btn">Зберегти</button>
+      </form>
     </div>
   </div>
 
-  <script src="js/main.js"></script>
+  <div id="toast" class="toast hidden"></div>
+
+  <script type="module" src="js/main.js"></script>
 </body>
 </html>

@@ -1,29 +1,33 @@
+// 1. ІМПОРТИ (ЗАВЖДИ НА САМОМУ ПОЧАТКУ ФАЙЛУ)
+import { api } from './api.js';
+import { ui } from './ui.js';
+
+// 2. ГЛОБАЛЬНИЙ СТАН
+let currentItems = [];
+
+// 3. ІНІЦІАЛІЗАЦІЯ
 document.addEventListener('DOMContentLoaded', init);
 
-// Глобальний стан додатку (Каталог)
-let allServices = [];
-let filteredServices = [];
-let visibleCount = 4;
-const ITEMS_PER_PAGE = 4;
-const FAVORITES_KEY = 'catalogFavorites';
-
-async function init() {
-  // Ініціалізація загального UI
+function init() {
+  // Ініціалізація загального UI (з минулих лабораторних)
   initActiveNav();
   initMenuToggle();
   initThemeToggle();
   initBackToTop();
   initAccordion();
-  initFilters();
+  initFilters(); // Для сторінки "Про мене"
   initContactForm();
-  
-  // Ініціалізація каталогу та модальних вікон
-  initStaticUI();
-  await initCatalogPage();
+
+  // Ініціалізація логіки каталогу (CRUD)
+  const grid = document.getElementById('services-grid');
+  if (grid) {
+    loadData();
+    setupCRUDEventListeners();
+  }
 }
 
 // ==========================================
-// 1. Загальний UI
+// ЧАСТИНА 1: СТАРИЙ ЗАГАЛЬНИЙ UI
 // ==========================================
 
 function initActiveNav() {
@@ -32,17 +36,17 @@ function initActiveNav() {
   const currentPath = window.location.pathname;
   navLinks.forEach(link => {
     const linkPath = link.getAttribute('href');
-    if (currentPath.endsWith(linkPath) || (linkPath === 'index.html' && currentPath.endsWith('/'))) {
-      link.classList.add('is-active');
+    if (currentPath.endsWith(linkPath) || (linkPath.includes('index.html') && currentPath.endsWith('/'))) {
+      link.classList.add('is-active', 'active');
     } else {
-      link.classList.remove('is-active');
+      link.classList.remove('is-active', 'active');
     }
   });
 }
 
 function initMenuToggle() {
-  const burgerBtn = document.querySelector('.burger-menu');
-  const navMenu = document.querySelector('.nav-menu');
+  const burgerBtn = document.querySelector('.burger-menu') || document.querySelector('.burger-btn');
+  const navMenu = document.querySelector('.nav-menu') || document.querySelector('.nav-list');
   if (!burgerBtn || !navMenu) return;
   
   burgerBtn.addEventListener('click', () => {
@@ -51,7 +55,7 @@ function initMenuToggle() {
   });
   
   navMenu.addEventListener('click', (e) => {
-    if (e.target.classList.contains('nav-link')) {
+    if (e.target.tagName === 'A') {
       navMenu.classList.remove('is-open');
       burgerBtn.setAttribute('aria-expanded', 'false');
     }
@@ -81,20 +85,20 @@ function initThemeToggle() {
 }
 
 function initBackToTop() {
-  const backToTopBtn = document.querySelector('.back-to-top');
-  const yearSpan = document.querySelector('.current-year');
+  const backToTopBtn = document.querySelector('.back-to-top') || document.querySelector('.scroll-btn');
+  const yearSpans = document.querySelectorAll('.current-year');
   
-  if (yearSpan) {
-    yearSpan.textContent = new Date().getFullYear();
-  }
+  yearSpans.forEach(span => span.textContent = new Date().getFullYear());
   
   if (!backToTopBtn) return;
   
   window.addEventListener('scroll', () => {
     if (window.scrollY > 300) {
       backToTopBtn.removeAttribute('hidden');
+      backToTopBtn.classList.add('is-visible');
     } else {
       backToTopBtn.setAttribute('hidden', '');
+      backToTopBtn.classList.remove('is-visible');
     }
   });
   
@@ -121,14 +125,16 @@ function initAccordion() {
 
 function initFilters() {
   const filterButtons = document.querySelectorAll('.filter-btn');
-  const cards = document.querySelectorAll('.service-card-static'); // Уникнення конфлікту з динамічними картками
+  const cards = document.querySelectorAll('.service-card-static, .filter-item'); 
   if (!filterButtons.length || !cards.length) return;
   filterButtons.forEach(button => {
     button.addEventListener('click', () => {
-      const category = button.dataset.category;
+      const category = button.dataset.category || button.dataset.filter;
       cards.forEach(card => {
-        const match = category === 'all' || card.dataset.category === category;
+        const cardCat = card.dataset.category;
+        const match = category === 'all' || cardCat === category;
         card.hidden = !match;
+        if (!match) card.style.display = 'none'; else card.style.display = '';
       });
       filterButtons.forEach(btn => btn.classList.remove('active'));
       button.classList.add('active');
@@ -144,12 +150,12 @@ function initContactForm() {
   const emailInput = form.querySelector('[name="email"]');
   const messageInput = form.querySelector('[name="message"]');
   const charCounter = form.querySelector('.char-counter');
-  const successBlock = document.querySelector('.form-success-block');
+  const successBlock = document.querySelector('.form-success-block') || document.querySelector('#form-success');
   const draftKey = 'contactDraft';
 
   if (messageInput && charCounter) {
     messageInput.addEventListener('input', () => {
-      charCounter.textContent = `Введено символів: ${messageInput.value.length}`;
+      charCounter.textContent = `Введено символів: ${messageInput.value.length}/500`;
     });
   }
 
@@ -172,7 +178,7 @@ function initContactForm() {
       if (emailInput && data.email) emailInput.value = data.email;
       if (messageInput && data.message) {
         messageInput.value = data.message;
-        if (charCounter) charCounter.textContent = `Введено символів: ${data.message.length}`;
+        if (charCounter) charCounter.textContent = `Введено символів: ${data.message.length}/500`;
       }
     } catch (e) {
       console.error("Помилка читання чернетки", e);
@@ -182,7 +188,7 @@ function initContactForm() {
   form.addEventListener('submit', (event) => {
     event.preventDefault();
     let isValid = true;
-    form.querySelectorAll('.error-message').forEach(el => el.textContent = '');
+    form.querySelectorAll('.error-message, .error-msg').forEach(el => el.textContent = '');
 
     if (nameInput && nameInput.value.trim().length < 2) {
       showError(nameInput, 'Ім’я повинно бути не коротшим за 2 символи!');
@@ -211,129 +217,81 @@ function initContactForm() {
           <p><strong>Повідомлення:</strong> ${data.message}</p>
         `;
         successBlock.removeAttribute('hidden');
+        successBlock.style.display = 'block';
       }
       form.reset();
       localStorage.removeItem(draftKey);
-      if (charCounter) charCounter.textContent = 'Введено символів: 0';
+      if (charCounter) charCounter.textContent = 'Введено символів: 0/500';
     }
   });
 
   function showError(inputElement, message) {
-    const errorTarget = inputElement.closest('.form-group')?.querySelector('.error-message') || inputElement.parentElement.querySelector('.error-message');
-    if (errorTarget) errorTarget.textContent = message;
+    const errorTarget = inputElement.closest('.form-group')?.querySelector('.error-message') || 
+                        inputElement.parentElement.querySelector('.error-message') ||
+                        inputElement.parentElement.querySelector('.error-msg');
+    if (errorTarget) {
+      errorTarget.textContent = message;
+      errorTarget.style.display = 'block';
+    }
   }
 }
 
 // ==========================================
-// 2. Каталог послуг (Fetch, JSON, DOM)
+// ЧАСТИНА 2: НОВИЙ КАТАЛОГ ПОСЛУГ (REST API CRUD)
 // ==========================================
 
-function initStaticUI() {
-  const modal = document.getElementById('details-modal');
-  const closeBtn = document.querySelector('.close-modal-btn');
-
-  if (closeBtn && modal) {
-    closeBtn.addEventListener('click', () => {
-      modal.classList.add('hidden');
-      document.body.style.overflow = '';
-    });
-
-    window.addEventListener('click', (e) => {
-      if (e.target === modal) {
-        modal.classList.add('hidden');
-        document.body.style.overflow = '';
+async function loadData() {
+  ui.showState('loading');
+  try {
+    // Збираємо параметри для фільтрації/сортування через API json-server
+    const searchInput = document.getElementById('search-input');
+    const categoryFilter = document.getElementById('category-filter');
+    const sortSelect = document.getElementById('sort-select');
+    
+    let queryParams = new URLSearchParams();
+    
+    if (searchInput && searchInput.value) queryParams.append('q', searchInput.value);
+    if (categoryFilter && categoryFilter.value !== 'all') queryParams.append('category', categoryFilter.value);
+    
+    if (sortSelect) {
+      if (sortSelect.value === 'price-asc') { 
+        queryParams.append('_sort', 'price'); 
+        queryParams.append('_order', 'asc'); 
       }
-    });
+      if (sortSelect.value === 'price-desc') { 
+        queryParams.append('_sort', 'price'); 
+        queryParams.append('_order', 'desc'); 
+      }
+    }
+
+    currentItems = await api.getItems(queryParams.toString());
+    
+    if (currentItems.length === 0) {
+      ui.showState('empty');
+    } else {
+      renderGrid(currentItems);
+      ui.showState('success');
+    }
+  } catch (error) {
+    ui.showState('error');
+    ui.showToast(error.message, true);
   }
 }
 
-async function initCatalogPage() {
+function renderGrid(items) {
   const grid = document.getElementById('services-grid');
   if (!grid) return;
-
-  try {
-    showState('loading');
-    allServices = await loadServices();
-    filteredServices = [...allServices];
-    applyFiltersAndRender();
-    setupEventListeners();
-  } catch (error) {
-    console.error(error);
-    showState('error');
-  }
-}
-
-async function loadServices() {
-  const response = await fetch('./data/services.json');
-  if (!response.ok) throw new Error(`Помилка мережі: ${response.status}`);
-  return await response.json();
-}
-
-function setupEventListeners() {
-  const searchInput = document.getElementById('search-input');
-  const categoryFilter = document.getElementById('category-filter');
-  const sortSelect = document.getElementById('sort-select');
-  
-  if (searchInput) searchInput.addEventListener('input', handleControlsChange);
-  if (categoryFilter) categoryFilter.addEventListener('change', handleControlsChange);
-  if (sortSelect) sortSelect.addEventListener('change', handleControlsChange);
-
-  const loadMoreBtn = document.getElementById('load-more-btn');
-  if (loadMoreBtn) {
-    loadMoreBtn.addEventListener('click', () => {
-      visibleCount += ITEMS_PER_PAGE;
-      renderCards();
-    });
-  }
-}
-
-function handleControlsChange() {
-  visibleCount = ITEMS_PER_PAGE;
-  const searchQuery = document.getElementById('search-input').value.toLowerCase().trim();
-  const selectedCategory = document.getElementById('category-filter').value;
-  const selectedSort = document.getElementById('sort-select').value;
-
-  filteredServices = allServices.filter(item => {
-    const matchesSearch = item.title.toLowerCase().includes(searchQuery) || item.description.toLowerCase().includes(searchQuery);
-    const matchesCategory = selectedCategory === 'all' || item.category === selectedCategory;
-    return matchesSearch && matchesCategory;
-  });
-
-  if (selectedSort === 'title-asc') {
-    filteredServices.sort((a, b) => a.title.localeCompare(b.title, 'uk'));
-  } else if (selectedSort === 'price-asc') {
-    filteredServices.sort((a, b) => a.price - b.price);
-  } else if (selectedSort === 'price-desc') {
-    filteredServices.sort((a, b) => b.price - a.price);
-  }
-
-  applyFiltersAndRender();
-}
-
-function applyFiltersAndRender() {
-  if (filteredServices.length === 0) {
-    showState('empty');
-  } else {
-    showState('success');
-    renderCards();
-  }
-}
-
-function renderCards() {
-  const grid = document.getElementById('services-grid');
   grid.innerHTML = '';
-  const favorites = getFavorites();
-  const itemsToRender = filteredServices.slice(0, visibleCount);
 
-  itemsToRender.forEach(item => {
-    const isFavorite = favorites.includes(item.id.toString());
+  items.forEach(item => {
     const card = document.createElement('div');
     card.className = 'service-card';
-    card.setAttribute('data-id', item.id);
+    // Додаємо fallback картинку, якщо її немає у базі
+    const imageUrl = item.image || "https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?w=500&q=80";
+    
     card.innerHTML = `
       <div class="card-img-wrapper">
-        <img src="${item.image}" alt="${item.title}" class="card-img">
-        <button class="favorite-btn ${isFavorite ? 'active' : ''}" aria-label="Додати в обране">★</button>
+        <img src="${imageUrl}" alt="${item.title}" class="card-img">
       </div>
       <div class="card-content">
         <span class="card-badge">${item.category.toUpperCase()}</span>
@@ -341,89 +299,111 @@ function renderCards() {
         <p class="card-desc">${item.description}</p>
         <div class="card-footer">
           <span class="card-price">$${item.price}</span>
-          <button class="btn btn-primary details-btn">Детальніше</button>
+          <div class="action-btns">
+            <button class="btn btn-secondary edit-btn" data-id="${item.id}">Редаг.</button>
+            <button class="btn btn-danger delete-btn" data-id="${item.id}">Видал.</button>
+          </div>
         </div>
       </div>
     `;
-
-    card.querySelector('.favorite-btn').addEventListener('click', (e) => {
-      e.stopPropagation();
-      toggleFavorite(item.id.toString(), e.target);
-    });
-
-    card.querySelector('.details-btn').addEventListener('click', () => {
-      openDetailsModal(item);
-    });
-
     grid.appendChild(card);
   });
+}
 
-  const loadMoreBtn = document.getElementById('load-more-btn');
-  if (loadMoreBtn) {
-    if (filteredServices.length > visibleCount) {
-      loadMoreBtn.classList.remove('hidden');
-    } else {
-      loadMoreBtn.classList.add('hidden');
-    }
+function setupCRUDEventListeners() {
+  const searchInput = document.getElementById('search-input');
+  const categoryFilter = document.getElementById('category-filter');
+  const sortSelect = document.getElementById('sort-select');
+  const addNewBtn = document.getElementById('add-new-btn');
+  const closeFormBtn = document.getElementById('close-form-btn');
+  const crudForm = document.getElementById('crud-form');
+  const servicesGrid = document.getElementById('services-grid');
+
+  if (searchInput) searchInput.addEventListener('input', debounce(loadData, 500));
+  if (categoryFilter) categoryFilter.addEventListener('change', loadData);
+  if (sortSelect) sortSelect.addEventListener('change', loadData);
+
+  if (addNewBtn) {
+    addNewBtn.addEventListener('click', () => {
+      document.getElementById('form-title').textContent = 'Додати послугу';
+      ui.toggleModal(true);
+    });
   }
-}
-
-function showState(state) {
-  const loading = document.getElementById('catalog-loading');
-  const error = document.getElementById('catalog-error');
-  const empty = document.getElementById('catalog-empty');
-  const grid = document.getElementById('services-grid');
-  const loadMoreBtn = document.getElementById('load-more-btn');
-
-  loading?.classList.add('hidden');
-  error?.classList.add('hidden');
-  empty?.classList.add('hidden');
-  grid?.classList.add('hidden');
-  loadMoreBtn?.classList.add('hidden');
-
-  if (state === 'loading') loading?.classList.remove('hidden');
-  else if (state === 'error') error?.classList.remove('hidden');
-  else if (state === 'empty') empty?.classList.remove('hidden');
-  else if (state === 'success') grid?.classList.remove('hidden');
-}
-
-function getFavorites() {
-  return JSON.parse(localStorage.getItem(FAVORITES_KEY)) || [];
-}
-
-function toggleFavorite(id, buttonElement) {
-  let favorites = getFavorites();
-  if (favorites.includes(id)) {
-    favorites = favorites.filter(favId => favId !== id);
-    buttonElement.classList.remove('active');
-  } else {
-    favorites.push(id);
-    buttonElement.classList.add('active');
-  }
-  localStorage.setItem(FAVORITES_KEY, JSON.stringify(favorites));
-}
-
-function openDetailsModal(item) {
-  const modal = document.getElementById('details-modal');
-  const modalBody = document.getElementById('modal-body');
-  if (!modal || !modalBody) return;
-
-  modalBody.innerHTML = `
-    <div class="modal-grid">
-      <img src="${item.image}" alt="${item.title}" class="modal-img">
-      <div>
-        <span class="card-badge">${item.category.toUpperCase()}</span>
-        <h2>${item.title}</h2>
-        <p class="modal-rating">⭐ Рейтинг: <strong>${item.rating} / 5.0</strong></p>
-        <p class="modal-full-desc">${item.description}</p>
-        <div class="modal-actions">
-          <span class="modal-price">Орієнтовна вартість: $${item.price}</span>
-          <button class="btn btn-primary" onclick="alert('Дякуємо за замовлення! Менеджер зв\\'яжеться з вами.')">Замовити послугу</button>
-        </div>
-      </div>
-    </div>
-  `;
   
-  modal.classList.remove('hidden');
-  document.body.style.overflow = 'hidden';
+  if (closeFormBtn) {
+    closeFormBtn.addEventListener('click', () => ui.toggleModal(false));
+  }
+
+  if (crudForm) {
+    crudForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const submitBtn = document.getElementById('submit-btn');
+      submitBtn.disabled = true;
+      submitBtn.textContent = 'Збереження...';
+
+      const formData = new FormData(e.target);
+      const data = Object.fromEntries(formData.entries());
+      data.price = Number(data.price);
+      const id = data.id;
+      delete data.id; 
+
+      try {
+        if (id) {
+          await api.updateItem(id, data);
+          ui.showToast('Запис успішно оновлено!');
+        } else {
+          await api.createItem(data);
+          ui.showToast('Запис успішно створено!');
+        }
+        ui.toggleModal(false);
+        loadData();
+      } catch (error) {
+        ui.showToast(error.message, true);
+      } finally {
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Зберегти';
+      }
+    });
+  }
+
+  if (servicesGrid) {
+    servicesGrid.addEventListener('click', async (e) => {
+      const id = e.target.dataset.id;
+      
+      if (e.target.classList.contains('delete-btn')) {
+        if (confirm('Ви впевнені, що хочете видалити цей запис?')) {
+          try {
+            await api.deleteItem(id);
+            ui.showToast('Запис видалено!');
+            loadData();
+          } catch (error) {
+            ui.showToast(error.message, true);
+          }
+        }
+      }
+
+      if (e.target.classList.contains('edit-btn')) {
+        const item = currentItems.find(i => i.id == id);
+        if (item) {
+          document.getElementById('item-id').value = item.id;
+          document.getElementById('item-title').value = item.title;
+          document.getElementById('item-category').value = item.category;
+          document.getElementById('item-price').value = item.price;
+          document.getElementById('item-desc').value = item.description;
+          
+          document.getElementById('form-title').textContent = 'Редагувати послугу';
+          ui.toggleModal(true);
+        }
+      }
+    });
+  }
+}
+
+// Допоміжна функція
+function debounce(func, delay) {
+  let timeout;
+  return function(...args) {
+    clearTimeout(timeout);
+    timeout = setTimeout(() => func.apply(this, args), delay);
+  };
 }

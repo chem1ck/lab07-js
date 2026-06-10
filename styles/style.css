@@ -408,3 +408,38 @@ input:focus, textarea:focus {
 }
 
 .hidden { display: none !important; }
+/* Нові кнопки для CRUD */
+.action-btns {
+  display: flex;
+  gap: 10px;
+}
+.btn-danger {
+  background-color: #e63946;
+  color: white;
+  border: none;
+}
+.btn-danger:hover {
+  background-color: #d62828;
+}
+
+/* Toast Повідомлення (Success/Error) */
+.toast {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  color: white;
+  padding: 15px 25px;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  z-index: 2000;
+  transition: opacity 0.3s;
+}
+
+/* Форма в модалці */
+#crud-form .form-group {
+  margin-bottom: 15px;
+}
+#crud-form label {
+  font-weight: 600;
+  margin-bottom: 5px;
+}
